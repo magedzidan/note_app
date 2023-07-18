@@ -10,8 +10,8 @@ class NotesViewBody extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
         children: [
-          SizedBox(height: 70,),
-            CustomAppBar(),
+          SizedBox(height: 80,),
+            CustomAppBar(title: "Note",icon: Icons.search),
             NotesList(),
             
             
@@ -28,12 +28,12 @@ class NotesList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical:8.0),
+        padding: const EdgeInsets.symmetric(vertical:0.0),
         child: ListView.separated(itemBuilder: (context, index) {
           Padding:EdgeInsets.zero;
             return  NoteItem();
             
-        },separatorBuilder:(context, index) => SizedBox(height: 5,),
+        },separatorBuilder:(context, index) => SizedBox(height: 10,),
         itemCount: 10,
         ),
       ),
