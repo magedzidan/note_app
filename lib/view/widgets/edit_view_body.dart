@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:note_app/view/notes_view.dart';
 import 'package:note_app/view/widgets/custom_appbar.dart';
 
+import 'custom_textfield.dart';
+
 class EditViewBody extends StatelessWidget {
   const EditViewBody({super.key});
 

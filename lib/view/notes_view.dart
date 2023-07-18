@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:note_app/view/widgets/constants.dart';
 import 'package:note_app/view/widgets/custom_button.dart';
+import 'package:note_app/view/widgets/custom_textfield.dart';
 import 'package:note_app/view/widgets/notes_view_body.dart';
 
 class NotesView extends StatelessWidget {
@@ -16,40 +17,90 @@ class NotesView extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16)),
                 context: context,
                 builder: (context) {
-                  return AddBottomSheet();
+                  return const AddBottomSheet();
                 });
           },
-          child: Icon(Icons.add)),
-      body: NotesViewBody(),
+          child: const Icon(Icons.add)),
+      body: const NotesViewBody(),
     );
   }
 }
 
-class AddBottomSheet extends StatelessWidget {
-  const AddBottomSheet({super.key});
+class AddBottomSheet extends StatefulWidget {
+  const  AddBottomSheet({super.key});
+
+  @override
+  State<AddBottomSheet> createState() => _AddBottomSheetState();
+}
+
+class _AddBottomSheetState extends State<AddBottomSheet> {
+  @override
+  Widget build(BuildContext context) {
+    return  SingleChildScrollView(
+      child: AddNoteForm(),
+    );
+  }
+}
+
+class AddNoteForm extends StatefulWidget {
+   AddNoteForm({
+    super.key,
+  });
+
+  @override
+  State<AddNoteForm> createState() => _AddNoteFormState();
+}
+
+class _AddNoteFormState extends State<AddNoteForm> {
+  final GlobalKey<FormState> formKey=GlobalKey();
+
+  AutovalidateMode autovalidateMode=AutovalidateMode.disabled;
+
+  String? title,subtitle;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: const [
+    // ignore: prefer_const_constructors
+    return Form(
+      key: formKey,
+      autovalidateMode: autovalidateMode,
+      child:  Column(
+        children: [
         SizedBox(
           height: 40,
         ),
         CustomTextField(
           hint: "Title",
+          onSaved: (value){
+            title=value;
+          },
         ),
         SizedBox(
           height: 30,
         ),
         CustomTextField(
           hint: "Content",
+            onSaved: (value){
+            subtitle=value;
+          },
           maxLines: 5,
         ),
         SizedBox(
           height: 10,
         ),
-        CustomButton(),
+        CustomButton(
+          onTap: (){
+            if(formKey.currentState!.validate()){
+              formKey.currentState!.save();
+            }
+            else{
+              autovalidateMode=AutovalidateMode.always;
+              setState((){
+
+              });
+            }
+          },
+        ),
         SizedBox(
           height: 15,
         ),
@@ -58,51 +109,3 @@ class AddBottomSheet extends StatelessWidget {
   }
 }
 
-
-class CustomTextField extends StatelessWidget {
-  const CustomTextField(
-      {super.key,
-      required this.hint,
-      this.maxLines = 1,
-      this.onSaved,
-      this.onChanged});
-
-  final String hint;
-  final int maxLines;
-
-  final void Function(String?)? onSaved;
-
-  final Function(String)? onChanged;
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      onChanged: onChanged,
-      onSaved: onSaved,
-      validator: (value) {
-        if (value?.isEmpty ?? true) {
-          return 'Field is required ';
-        } else {
-          return null;
-        }
-      },
-      cursorColor: kPrimaryColor,
-      maxLines: maxLines,
-      decoration: InputDecoration(
-        hintText: hint,
-        border: buildBorder(),
-        enabledBorder: buildBorder(),
-        focusedBorder: buildBorder(kPrimaryColor),
-      ),
-    );
-  }
-
-  OutlineInputBorder buildBorder([color]) {
-    return OutlineInputBorder(
-        borderRadius: BorderRadius.circular(
-          8,
-        ),
-        borderSide: BorderSide(
-          color: kPrimaryColor ?? Colors.white,
-        ));
-  }
-}
